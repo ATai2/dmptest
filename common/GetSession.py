@@ -10,6 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from common.Rest import restPost
 
 
 class Test():
@@ -89,8 +90,11 @@ class Test():
             "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
             "Cookie": cookieStr
         }
-        post = requests.post(url, headers=headers)
-        print(post.text)
+
+        post = restPost(url, headers=headers)
+
+        # post = requests.post(url, headers=headers)
+        # print(post.text)
 
     # def __del__(self):
     #     # 退出程序时关闭浏览器
