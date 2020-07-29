@@ -10,7 +10,7 @@ from flask import request
 import json, sys, os, socket, time, datetime
 from threading import Timer
 from flask_caching import Cache
-from flask_apscheduler import APScheduler # 引入APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources=r'/*')
@@ -79,7 +79,7 @@ def downLoadFile():
 
 def timerTask():
     print('TimeNow:%s' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    t = Timer(5, freshDb)
+    t = Timer(1, freshDb)
     t.start()
 
 
@@ -110,6 +110,8 @@ def freshDb():
 
 
 if __name__ == '__main__':
-    timerTask()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(freshDb, 'interval', seconds=10)  # 间隔3秒钟执行一次
+    scheduler.start()  # 这里的调度任务是独立的一个线程
     app.debug = True  # 设置调试模式，生产模式的时候要关掉debug
     app.run(port=8000)
