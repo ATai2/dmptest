@@ -1,0 +1,13 @@
+{
+  "list": [
+    {
+      "lastDeployTime": "2020-07-29 10:10:10",
+      "hostName": "127.0.0.1",
+      "port": "8085",
+      "status": "up",
+      "dir": "/usr/local/dmp",
+      "cmd": "pwd",
+      "jarFile": "a.jar"
+    }
+  ]
+}
