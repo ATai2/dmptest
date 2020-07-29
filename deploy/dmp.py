@@ -7,25 +7,45 @@
 from flask_cors import *
 from flask import Flask
 from flask import request
-import json, sys, os
+import json, sys, os, socket, time, datetime
+from threading import Timer
+from flask_caching import Cache
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True,resources=r'/*')
+CORS(app, supports_credentials=True, resources=r'/*')
 
-@app.after_request
-def cors(environ):
-    environ.headers['Access-Control-Allow-Origin']='*'
-    environ.headers['Access-Control-Allow-Method']='*'
-    environ.headers['Access-Control-Allow-Headers']='x-requested-with,content-type'
-    return environ
+cache = Cache()
+app.config['CACHE_TYPE'] = 'simple'  # 本地缓存，一级缓存，缓存量大的情况下需使用二级缓存，一般使用redis
+app.config['CACHE_DEFAULT_TIMEOUT'] = 24 * 60 * 60  # 默认过期时间 5分钟
+cache.init_app(app)
 
-# http://前置服务器地址:8088/DataCollectorEnterpriseWeb/dataPushAction/uploadFile.do
+
 @app.route('/getAgents', methods=['post'])
 def getAgents():
-    dbs = []
+    dbs = cache.get("dbs")
+    if dbs != None:
+        return dbs
+
     with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "r+") as db:
         datas = db.read()
         dbs = json.loads(datas)
+        cache.set("dbs", dbs)  # 把数据放入缓存
+    return dbs
+
+
+@app.route('/addAgent', methods=['post'])
+def addAgent():
+    host_name = request.data
+    form = json.loads(host_name)
+    dbs = {}
+    with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "r+") as db:
+        datas = db.read()
+        dbs = json.loads(datas)
+    dbs['list'].append(form)
+
+    dumps = json.dumps(dbs)
+    with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "w+") as dbw:
+        dbw.write(dumps)
 
     return dbs
 
@@ -54,6 +74,36 @@ def downLoadFile():
     }
 
     return res
+
+
+def printHello():
+    print('TimeNow:%s' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    t = Timer(2, printHello)
+    t.start()
+
+
+def freshDb():
+    with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "r+") as db:
+        datas = db.read()
+        dbs = json.loads(datas)
+        for item in dbs['list']:
+            # 查询服务状态
+            try:
+                sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sk.settimeout(2)
+                sk.connect((str(item['hostName']), int(item['port'])))
+                sk.close()
+                now = time.strftime("%Y-%m-%d %H:%M:%S")
+                # item['lastDeployTime']=now
+                tt = "check port success!"
+                # logfile = "/home/op/check.log"
+                # f = open(logfile, 'a+')
+                # f.write(now + " " + tt + "\n")
+                # f.close()
+                item['status'] = 'up'
+            except socket.error:
+                item['status'] = 'down'
+        cache.set("dbs", dbs)
 
 
 if __name__ == '__main__':
