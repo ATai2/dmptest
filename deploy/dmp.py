@@ -7,10 +7,12 @@
 from flask_cors import *
 from flask import Flask
 from flask import request
-import json, sys, os, socket, time, datetime
+import json, sys, os, socket, time, datetime, requests
 from threading import Timer
 from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
+import paramiko
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources=r'/*')
@@ -34,6 +36,21 @@ def getAgents():
     return dbs
 
 
+@app.route('/getJars', methods=['post'])
+def getJars():
+    '''
+    更改文件服务器
+    :return:
+    '''
+    post = requests.get("http://localhost:8080")
+    soup = BeautifulSoup(post.text)
+    res = {"list": []}
+    for i in soup.find_all("li"):
+        item = i.text
+        res['list'].append(item)
+    return res
+
+
 @app.route('/addAgent', methods=['post'])
 def addAgent():
     host_name = request.data
@@ -51,41 +68,28 @@ def addAgent():
     return dbs
 
 
-# http://前置服务器地址:8088/DataCollectorEnterpriseWeb/dataPushAction/uploadFile.do
-@app.route('/DataCollectorEnterpriseWeb/dataPushAction/uploadFile.do', methods=['POST'])
-def uploadFile():
-    files = request.headers.get("files")
-    charset = request.headers.get("Accept-Charset")
-    type = request.headers.get("Content-Type")
+@app.route('/excute', methods=['post'])
+def excute():
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(hostname="10.72.213.91", username="dmp", password="asdfasdf", port="220")
 
-    api = request.form.get("API_CODE")
-    api = request.form.get("BUSINESS_TYPE")
-    # 上传，上传到根目录
+    channel = client.invoke_shell()
+    channel.send('ipconfig\n')
+    time.sleep(0.1)  # 这个延时必须要使用，要不然recv的内容中就不会含有ifconfig的内容
+    output = channel.recv(2024)
+    # output=channel.recv(2024).decode('utf-8')
+    print(output)
+    # Close the connection
+    client.close()
+    print('Connection closed.')
 
-    return 'Hello World'
-
-
-@app.route('/DataCollectorEnterpriseWeb/dataPushAction/downLoadFile.do', methods=['POST'])
-def downLoadFile():
-    # 文件下载， 从根目录取文件
-
-    res = {
-        "code": "1",
-        "msg": "ok"
-    }
-
-    return res
-
-
-def timerTask():
-    print('TimeNow:%s' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    t = Timer(1, freshDb)
-    t.start()
+    # return dbs
 
 
 def freshDb():
     print("定时任务begin")
-    timestart=time.time()
+    timestart = time.time()
     with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "r+") as db:
         datas = db.read()
         dbs = json.loads(datas)
@@ -105,8 +109,8 @@ def freshDb():
                 item['status'] = 'down'
         cache.set("dbs", dbs)
 
-        timeend=time.time()
-        print("耗时："+str(timeend-timestart))
+        timeend = time.time()
+        print("耗时：" + str(timeend - timestart))
 
 
 if __name__ == '__main__':
