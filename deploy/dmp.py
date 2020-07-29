@@ -84,6 +84,8 @@ def timerTask():
 
 
 def freshDb():
+    print("定时任务begin")
+    timestart=time.time()
     with open(os.path.join(os.path.join(os.path.dirname(__file__), "db"), "template.json"), "r+") as db:
         datas = db.read()
         dbs = json.loads(datas)
@@ -95,12 +97,16 @@ def freshDb():
                 sk.connect((str(item['hostName']), int(item['port'])))
                 sk.close()
                 now = time.strftime("%Y-%m-%d %H:%M:%S")
+                print(now)
                 # item['lastDeployTime']=now
                 tt = "check port success!"
                 item['status'] = 'up'
             except socket.error:
                 item['status'] = 'down'
         cache.set("dbs", dbs)
+
+        timeend=time.time()
+        print("耗时："+str(timeend-timestart))
 
 
 if __name__ == '__main__':
