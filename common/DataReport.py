@@ -51,7 +51,7 @@ class Test(object):
         # 显示结果
         # r.text
 
-        a=9
+
 
 
 
