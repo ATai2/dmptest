@@ -1,0 +1,3 @@
+python版本要求python3
+
+脚本是依托python3完成
