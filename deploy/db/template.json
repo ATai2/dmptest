@@ -3,7 +3,7 @@
     {
       "lastDeployTime": "2020-07-29 10:10:10",
       "hostName": "127.0.0.1",
-      "port": "8085",
+      "port": "8080",
       "status": "up",
       "dir": "/usr/local/dmp",
       "cmd": "pwd",

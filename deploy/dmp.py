@@ -10,6 +10,7 @@ from flask import request
 import json, sys, os, socket, time, datetime
 from threading import Timer
 from flask_caching import Cache
+from flask_apscheduler import APScheduler # 引入APScheduler
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources=r'/*')
