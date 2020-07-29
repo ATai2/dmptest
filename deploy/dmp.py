@@ -76,9 +76,9 @@ def downLoadFile():
     return res
 
 
-def printHello():
+def timerTask():
     print('TimeNow:%s' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    t = Timer(2, printHello)
+    t = Timer(5, freshDb)
     t.start()
 
 
@@ -96,10 +96,6 @@ def freshDb():
                 now = time.strftime("%Y-%m-%d %H:%M:%S")
                 # item['lastDeployTime']=now
                 tt = "check port success!"
-                # logfile = "/home/op/check.log"
-                # f = open(logfile, 'a+')
-                # f.write(now + " " + tt + "\n")
-                # f.close()
                 item['status'] = 'up'
             except socket.error:
                 item['status'] = 'down'
@@ -107,5 +103,6 @@ def freshDb():
 
 
 if __name__ == '__main__':
+    timerTask()
     app.debug = True  # 设置调试模式，生产模式的时候要关掉debug
     app.run(port=8000)
