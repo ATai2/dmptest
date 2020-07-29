@@ -27,15 +27,22 @@ def download_jar(url):
     :param url:
     :return:
     '''
-    down_res = requests.get(url=url)
+    down_res = requests.get(url=url, stream=True)
     if down_res.status_code != 200:
         logging.info(url + "下载失败")
         return
-    file_name = jar[jar.rfind("/") + 1:]
+    file_name = url[url.rfind("/") + 1:]
     print(file_name)
-    with open(os.path.join(os.path.dirname(__file__), file_name), "w+") as f:
+    with open(os.path.join(os.path.dirname(__file__), file_name), "wb+") as f:
         for a in down_res.iter_content(chunk_size=32):  # iter是iter
             f.write(a)
+    logging.info("下载%s成功")
+
+
+def start_pro(url):
+    logging.info("开始启动应用")
+    file_name = url[url.rfind("/") + 1:]
+    os.popen(" javaw -jar  " + file_name)
 
 
 def kill_old_process(port):
@@ -75,18 +82,25 @@ def kill_linux_process(port):
     command = '''kill -9 $(netstat -nlp | grep :''' + str(port) + ''' | awk '{print $7}' | awk -F"/" '{ print $1 }')'''
     os.system(command)
 
+
+with open(os.path.join(os.path.dirname(__file__), "a.log"), "w") as f:
+    f.write("haha")
+
 # test
 if __name__ == '__main__':
-    jar = "http://10.110.87.202:9998/a.log"
-    # jar = "http://10.110.87.202:9998/dmp-datafactory.jar"
-    jarPre = "http://10.110.87.202:9998/preposed-machine.jar"
+    with open(os.path.join(os.path.dirname(__file__), "a.log"), "w") as f:
+        f.write("haha")
 
-    if len(sys.argv) == 1:
-        print("no args")
-
-    kill_old_process(8085)
-
-    # download_jar(jar)
-
-    # with open(os.path.join(os.path.dirname(__file__), "a.log"), "w+") as f:
-    #     f.write("haha")
+    # jar = "http://10.110.87.202:9998/a.log"
+    # # jar = "http://10.110.87.202:9998/dmp-datafactory.jar"
+    # jarPre = "http://10.110.87.202:9998/preposed-machine.jar"
+    #
+    # print(sys.argv)
+    # if len(sys.argv) == 1:
+    #     print("no args")
+    #     kill_old_process(9001)
+    # else:
+    #     kill_old_process(sys.argv[1])
+    #
+    # download_jar(jarPre)
+    # start_pro(jarPre)
