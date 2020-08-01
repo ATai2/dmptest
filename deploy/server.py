@@ -4,15 +4,22 @@
 # datetime:2020/5/29 9:00
 # software: PyCharm
 
-from flask_cors import *
+import datetime
+import json
+import os
+import requests
+import socket
+import sys
+import time
+from threading import Timer
+
+import paramiko
+from apscheduler.schedulers.background import BackgroundScheduler
+from bs4 import BeautifulSoup
 from flask import Flask
 from flask import request
-import json, sys, os, socket, time, datetime, requests
-from threading import Timer
 from flask_caching import Cache
-from apscheduler.schedulers.background import BackgroundScheduler
-import paramiko
-from bs4 import BeautifulSoup
+from flask_cors import *
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources=r'/*')
@@ -42,7 +49,7 @@ def getJars():
     更改文件服务器
     :return:
     '''
-    post = requests.get("http://localhost:8080")
+    post = requests.get("http://10.110.87.202:9998")
     soup = BeautifulSoup(post.text)
     res = {"list": []}
     for i in soup.find_all("li"):
@@ -70,21 +77,32 @@ def addAgent():
 
 @app.route('/excute', methods=['post'])
 def excute():
+    host_name = request.data
+    form = json.loads(host_name)
+
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(hostname="10.72.213.91", username="dmp", password="asdfasdf", port="220")
+    client.connect(hostname=form['hostName'], username="dmp", password="asdfasdf", port="220")
 
     channel = client.invoke_shell()
-    channel.send('ipconfig\n')
+    channel.send(form['cmd'] + '\n')
     time.sleep(0.1)  # 这个延时必须要使用，要不然recv的内容中就不会含有ifconfig的内容
     output = channel.recv(2024)
+
+
     # output=channel.recv(2024).decode('utf-8')
     print(output)
     # Close the connection
     client.close()
     print('Connection closed.')
 
-    # return dbs
+    # clientTrans = paramiko.Transport((form['hostName'],220))
+    # clientTrans.connect(username="dmp", password="asdfasdf", port=220)
+    # sftp = paramiko.SFTPClient.from_transport(clientTrans)
+    # sftp.put("D:\\tools\\a.rp", form["dir"])
+    # clientTrans.close()
+
+    return "dbs"
 
 
 def freshDb():
@@ -114,8 +132,8 @@ def freshDb():
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(freshDb, 'interval', seconds=10)  # 间隔3秒钟执行一次
-    scheduler.start()  # 这里的调度任务是独立的一个线程
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(freshDb, 'interval', seconds=10)  # 间隔3秒钟执行一次
+    # scheduler.start()  # 这里的调度任务是独立的一个线程
     app.debug = True  # 设置调试模式，生产模式的时候要关掉debug
     app.run(port=8000)

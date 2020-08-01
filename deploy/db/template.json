@@ -3,11 +3,12 @@
     {
       "lastDeployTime": "2020-07-29 10:10:10",
       "hostName": "127.0.0.1",
+      "excutePort": "10100",
       "port": "8080",
       "status": "up",
-      "dir": "/usr/local/dmp",
+      "dir": "D:/data",
       "cmd": "pwd",
-      "jarFile": "a.jar"
+      "jarFile": "premachine.jar"
     }
   ]
 }
