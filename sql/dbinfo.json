@@ -1,0 +1,8 @@
+{
+  "localhost": {
+    "username": "sa",
+    "pwd": "asdfF@1234",
+    "url": "jdbc:sqlserver://localhost:1433;databaseName=paas",
+    "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+  }
+}

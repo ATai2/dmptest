@@ -20,7 +20,6 @@ def excute():
     form = json.loads(host_name)
 
 
-
     return "ok"
 
 
