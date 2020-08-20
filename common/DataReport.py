@@ -10,6 +10,7 @@ import time, requests,base64
 import common.Config as config
 
 
+
 class Test(object):
     url = "http://localhost:8085"
 
@@ -50,6 +51,7 @@ class Test(object):
         # r = s.get("http://httpbin.org/cookies")
         # 显示结果
         # r.text
+
 
 
 

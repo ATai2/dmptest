@@ -1,8 +1,21 @@
 {
-  "localhost": {
-    "username": "sa",
-    "pwd": "asdfF@1234",
-    "url": "jdbc:sqlserver://localhost:1433;databaseName=paas",
-    "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-  }
+  "mssql": [
+    {
+      "username": "sa",
+      "pwd": "asdfF@1234",
+      "port": "1433",
+      "database": "paas",
+      "host": "localhost"
+    }
+  ],
+  "dm": [],
+  "oracle": [
+    {
+      "username": "paas",
+      "pwd": "paas",
+      "port": "1521",
+      "database": "ORCL",
+      "host": "10.110.87.236"
+    }
+  ]
 }
