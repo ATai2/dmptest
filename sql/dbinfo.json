@@ -4,7 +4,7 @@
       "username": "sa",
       "pwd": "asdfF@1234",
       "port": "1433",
-      "database": "paas",
+      "database": "paas_copy",
       "host": "localhost"
     }
   ],

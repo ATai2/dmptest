@@ -6,7 +6,9 @@
 
 
 import cx_Oracle
-import os, re, sys,json
+import os, re, sys, json
+
+cx_Oracle.init_oracle_client(lib_dir=r"D:\tools\instantclient_19_8")
 
 
 def get_sql_files(absdbfilePath):
@@ -38,13 +40,16 @@ def connectSQL(absdbfilePath, db):
 
 
 def executeScriptsFromFile(filename, cursor):
-    fd = open(filename, 'r', encoding='utf-8')
-    sqlFile = fd.read()
-    fd.close()
+    sqlFile = ''
+    with  open(filename, 'r', encoding='utf-8') as fd:
+        listlines = fd.readlines()
+        for item in listlines:
+            if item.strip() == "/":
+                continue
+            sqlFile = sqlFile + item
+    # oracle 整体执行
 
-    sqlCommands = sqlFile.split('/')
-
-    for command in sqlCommands:
+    for command in [sqlFile]:
         print("==========================")
         print(command)
         try:
@@ -55,6 +60,7 @@ def executeScriptsFromFile(filename, cursor):
             print(msg)
     print('sql执行完成')
 
+
 def cycle_db(path):
     path_join = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dbinfo.json")
     with open(path_join, "r") as f:
@@ -64,6 +70,44 @@ def cycle_db(path):
         for item in dblist:
             connectSQL(path, item)
 
+
 if __name__ == '__main__':
-    cycle_db("D:\doc\BA-DMP-DOC\项目管理\数据管理平台202009\\03数据库设计\\01DMP202009全量sql\Oracle\ddl")
-    cycle_db("D:\doc\BA-DMP-DOC\项目管理\数据管理平台202009\\03数据库设计\\01DMP202009全量sql\Oracle\dml")
+    # cycle_db("D:\doc\BA-DMP-DOC\项目管理\数据管理平台202009\\03数据库设计\\01DMP202009全量sql\Oracle\ddl")
+    # cycle_db("D:\doc\BA-DMP-DOC\项目管理\数据管理平台202009\\03数据库设计\\01DMP202009全量sql\Oracle\dml")
+    sql = '''
+ declare
+      num int :=0;
+begin
+
+	select count(1) into num from R_LOGLEVEL ;
+	if(num <= 0 ) then
+		execute immediate ( 'INSERT INTO R_LOGLEVEL VALUES (''1'', ''Error'', ''错误日志'')');
+
+		execute immediate ( 'INSERT INTO R_LOGLEVEL VALUES (''2'', ''Minimal'', ''最小日志'')');
+
+		execute immediate ( 'INSERT INTO R_LOGLEVEL VALUES (''3'', ''Basic'', ''基本日志'')');
+
+		execute immediate ( 'INSERT INTO R_LOGLEVEL VALUES (''4'', ''Detailed'', ''详细日志'')');
+
+		execute immediate ('INSERT INTO R_LOGLEVEL VALUES (''5'', ''Debug'', ''调试'')');
+
+		execute immediate ( 'INSERT INTO R_LOGLEVEL VALUES (''6'', ''Rowlevel'', ''行级日志(非常详细)'')');
+	end if;
+end;
+    '''
+    path_join = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dbinfo.json")
+    with open(path_join, "r") as f:
+        content = f.read()
+        dbinfo = json.loads(content)
+        dblist = dbinfo['oracle']
+        db=dblist[0]
+        db = cx_Oracle.connect("%s/%s@%s/%s" % (db['username'], db['pwd'], db['host'], db['database']))
+
+    # 使用 cursor() 方法创建一个游标对象 cursor
+    cursor = db.cursor()
+    try:
+        execute = cursor.execute(sql)
+        print(execute)
+    except Exception as e:
+        print(e)
+    db.close()
