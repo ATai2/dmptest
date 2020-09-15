@@ -51,11 +51,14 @@ def executeScriptsFromFile(filename, cursor):
             command = command[:-2]
         print(command)
         try:
-            cursor.execute(command)
+            command = command.strip()
+            if command.endswith("\n"):
+                command.replace("\n","")
+            execute = cursor.execute(command)
             print("OK")
         except Exception as msg:
 
-            print("error: "+msg)
+            print("error: " + str(msg))
     print('sql执行完成')
 
 

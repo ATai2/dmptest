@@ -4,7 +4,7 @@
       "username": "sa",
       "pwd": "asdfF@1234",
       "port": "1433",
-      "database": "paas_copy",
+      "database": "pyinputtest",
       "host": "localhost"
     }
   ],

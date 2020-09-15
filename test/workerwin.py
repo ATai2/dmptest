@@ -38,8 +38,6 @@ def hell0():
 
 @app.route('/start', methods=['get'])
 def start():
-    # req = request.data
-    # data = json.loads(req)
     port = request.args.get("port")
     # 限定目录
     # location = data.get("location")
