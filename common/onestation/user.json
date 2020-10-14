@@ -1,0 +1,46 @@
+{
+  "deault_org": "dmp",
+  "deault_role": "",
+  "users": [
+    {
+      "name": "lygg",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "lc",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "zyq",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "wth",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "zh",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "dsy",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "zp",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "lymm",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "zd",
+      "pwd": "asdf@1234"
+    },
+    {
+      "name": "mr",
+      "pwd": "asdf@1234"
+    }
+  ]
+}
