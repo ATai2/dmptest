@@ -30,9 +30,9 @@ class Test(object):
     def test_close(self):
         self.driver.quit()
 
-    def __del__(self):
-        # 退出程序时关闭浏览器
-        self.driver.quit()
+    # def __del__(self):
+    #     退出程序时关闭浏览器
+        # self.driver.quit()
 
 
 # driver.implicitly_wait(10)
@@ -56,4 +56,7 @@ class Test(object):
 if __name__ == '__main__':
     bean = Test()
     bean.test_login()
+
+    print(bean.driver.get_cookies())
+
     bean.test_close()

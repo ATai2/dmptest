@@ -93,8 +93,22 @@ class Test():
 
         post = restPost(url, headers=headers)
 
-        # post = requests.post(url, headers=headers)
-        # print(post.text)
+    def post_api(self, cookies, path, data):
+        url = self.url +'/dmp-datafactory'+ path
+        cookieMap = {}
+        cookieStr = ""
+        for item in cookies:
+            cookieStr += item['name'] + "=" + item['value'] + ";"
+            cookieMap[item['name']] = item['value']
+        headers = {
+            "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
+            "Cookie": cookieStr
+        }
+
+        return restPost(url, headers=headers, json=data)
+
+    # post = requests.post(url, headers=headers)
+    # print(post.text)
 
     # def __del__(self):
     #     # 退出程序时关闭浏览器
@@ -106,17 +120,40 @@ class Test():
         self.browser.close()
         self.browser.quit()
 
+    def save_settingdata(self, cookies):
+        data = {"id": "e39bb24b-e437-4b39-9d10-2b9a90a6fff5", "ip": None, "port": None, "reportAgency": "云南国资委",
+                "socialCreditCode": "1153000075718792X1", "apiCode": "SZ01", "userName": "Seq0vAPlI4kxaO82PA+VUA==",
+                "userPasswd": "Seq0vAPlI4kxaO82PA+VUA==", "preUserName": "Seq0vAPlI4kxaO82PA+VUA==",
+                "preUserPasswd": "Seq0vAPlI4kxaO82PA+VUA==", "uploadPath": "mvwO1O0sV9zehtOkSNf+IQ==",
+                "downLoadPath": "92FbnU6mnuHwExgtaXhj1A==",
+                "uploadUrl": "http://10.72.86.255:9010/preposed-machine/api/services/fileUpload",
+                "catalogUrl": "http://10.72.86.255:9010/preposed-machine/api/services/tempDownload",
+                "noticeUrl": "http://10.72.86.255:9010/preposed-machine/api/services/noticeDownload",
+                "keyUrl": "http://10.72.86.255:9010/preposed-machine/api/services/keyDownload",
+                "taskUrl": "http://10.72.86.255:9010/preposed-machine/api/services/taskDwonload",
+                "logUrl": "http://10.72.86.255:9010/preposed-machine/api/services/logDownload", "acceptDataUrl": "",
+                "prePollFileUrl": "http://127.0.0.1:8099/preposed-machine/api/superior/pollUploadFile",
+                "preCatalogUrl": "", "preNoticeUrl": "", "preKeyUrl": "", "preTaskUrl": "", "preDataUrl": "",
+                "preStatusUrl": "", "prePointConnUrl": "",
+                "sm2Key": "090023816A21F8526161DF47B1D0BDBA7765FA436E94507A6EAEEB74D4AB76593C94FAF46C0104DB92E6F39277AB59F192AB7B38FD746276EF37F956CDF8DBDC",
+                "sm4Key": "6629a5eb0b9149a29de72afd88f05ba7", "superiorSM2Key": "", "sm2PrivateKey": "", "modeWay": "1",
+                "gridData": "[{\"businessCaption\":\"省国资委采集目录\",\"businessLabel\":\"0037\",\"reportPath\":\"\"},{\"businessCaption\":\"反馈文件\",\"businessLabel\":\"0007\",\"reportPath\":\"\"},{\"businessCaption\":\"静态文件\",\"businessLabel\":\"0002\",\"reportPath\":\"\"}]"}
+        post = self.post_api(cookies, "/gzapi/save", data=data)
+        print(post.text)
+
 
 if __name__ == "__main__":
     obj = Test()
-    obj.login_system()
-    obj.get_welcome()
-    cookies = obj.get_cookies()
-    print(cookies)
-    obj.test_getSettingData(cookies)
-
-    obj.close()
-
+    try:
+        obj.login_system()
+        obj.get_welcome()
+        cookies = obj.get_cookies()
+        obj.save_settingdata(cookies)
+        obj.close()
+    except Exception as e:
+        print(e)
+    finally:
+        obj.close()
     # sessionid = obj.get_sessionid()
     # token = obj.get_token()
     # print(f"sessionid为： {sessionid}\n"
