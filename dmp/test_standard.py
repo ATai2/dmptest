@@ -17,15 +17,15 @@ import pytest
 
 class TestReport:
     # @pytest.mark.parametrize("case,data,expected", list(list_params), ids=cases)
-    def test_save_label_scope(self):
-        test = DmpLogin()
-        try:
-            data = {"dimname": "dd", "dimcode": "dd", "descriptions": "test", "pid": "-1", "orderid": "1"}
-            post = test.post_api("/labelDimension/saveTagDimension", json=data)
-            util.info(post)
-
-        except Exception as e:
-            util.info(e)
+    # def test_save_label_scope(self):
+    #     test = DmpLogin()
+    #     try:
+    #         data = {"dimname": "dd", "dimcode": "dd", "descriptions": "test", "pid": "-1", "orderid": "1"}
+    #         post = test.post_api("/labelDimension/saveTagDimension", json=data)
+    #         util.info(post)
+    #
+    #     except Exception as e:
+    #         util.info(e)
 
     def test_del_label_scope(self):
         test = DmpLogin()
@@ -45,6 +45,9 @@ class TestReport:
         assert postsave['code'] == '200'
         assert postsearch['total'] == 1
         assert post['code'] == '200'
+
+
+    # def test_
 
 if __name__ == '__main__':
     b = TestReport()

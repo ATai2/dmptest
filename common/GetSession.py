@@ -98,11 +98,17 @@ class DmpLogin():
         return post
 
     def post_api(self, path, json=None, data=None):
+        print("参数path"+path)
+        print("参数json"+str(json))
+        print("参数data"+str(data))
+
         url = self.url + '/dmp-datafactory' + path
 
         return restPost(url, headers=self.headers, json=json, data=data)
 
     def get_api(self, path, params=None):
+        print("参数path" + path)
+        print("参数params" + str(params))
         url = self.url + '/dmp-datafactory' + path
         post = requests.get(url, params=params, headers=self.headers)
         if post.status_code == 200:
@@ -122,7 +128,7 @@ class DmpLogin():
 
     def close(self):
         # 退出程序时关闭浏览器
-        self.browser.close()
+        # self.browser.close()
         self.browser.quit()
 
 
