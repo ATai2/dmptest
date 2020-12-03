@@ -20,14 +20,14 @@ class TestReport:
         try:
             setting = json.loads(setting_data)
             data['id'] = setting['data']['basicInfoMap']['id']
-            post = test.post_api("/gzapi/save", data=data)
-            print(post)
+            post = test.post_api("/gzapi/save", json=data)
+            util.info(post)
         except Exception as e:
-            print(e)
-            post = test.post_api("/gzapi/save", data=data)
-            print(post)
+            util.info(e)
+            post = test.post_api("/gzapi/save", json=data)
+            util.info(post)
 
-        assert json.loads(post)['rs'] == expected['rs']
+        assert post['rs'] == expected['rs']
 
 
 print(list_params)
