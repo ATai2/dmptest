@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 from common.Rest import restPost
 
 
-class Test():
+class DmpLogin():
     def __init__(self):
         self.url = 'http://localhost:8085'
         # 启用无头模式，可选
@@ -23,13 +23,25 @@ class Test():
         self.browser = webdriver.Chrome(chrome_options=browser_options)
         # self.browser = webdriver.Chrome()
 
+        self.login_system()
+        cookies = self.get_cookies()
+        cookieMap = {}
+        cookieStr = ""
+        for item in cookies:
+            cookieStr += item['name'] + "=" + item['value'] + ";"
+            cookieMap[item['name']] = item['value']
+        self.headers = {
+            "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
+            "Cookie": cookieStr
+        }
+
     # 登录系统，具体到自己系统时需要自行修改
     def login_system(self):
         # 登录用户名密码，改成目标系统用户名密码
         username = "scott"
         password = "aaaaaa"
         # 登录页面url，改成目标系统登录页面
-        url = "http://localhost:8085/dmp-datafactory/#"
+        url = self.url + "/dmp-datafactory/#"
         self.browser.get(url)
         # 显性等待，直到用户名控件加载出来才进行下一步
         WebDriverWait(self.browser, 20, 0.5).until(lambda x: x.find_element_by_id("j_username"))
@@ -79,33 +91,15 @@ class Test():
         # print(f"{token}")
         return token
 
-    def test_getSettingData(self, cookies):
+    def getSettingData(self):
         url = self.url + '/dmp-datafactory/gzapi/getSettingData'
-        cookieMap = {}
-        cookieStr = ""
-        for item in cookies:
-            cookieStr += item['name'] + "=" + item['value'] + ";"
-            cookieMap[item['name']] = item['value']
-        headers = {
-            "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
-            "Cookie": cookieStr
-        }
+        post = restPost(url, headers=self.headers)
+        return post
 
-        post = restPost(url, headers=headers)
+    def post_api(self, path, data):
+        url = self.url + '/dmp-datafactory' + path
 
-    def post_api(self, cookies, path, data):
-        url = self.url +'/dmp-datafactory'+ path
-        cookieMap = {}
-        cookieStr = ""
-        for item in cookies:
-            cookieStr += item['name'] + "=" + item['value'] + ";"
-            cookieMap[item['name']] = item['value']
-        headers = {
-            "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
-            "Cookie": cookieStr
-        }
-
-        return restPost(url, headers=headers, json=data)
+        return restPost(url, headers=self.headers, json=data)
 
     # post = requests.post(url, headers=headers)
     # print(post.text)
@@ -120,8 +114,11 @@ class Test():
         self.browser.close()
         self.browser.quit()
 
-    def save_settingdata(self, cookies):
-        data = {"id": "e39bb24b-e437-4b39-9d10-2b9a90a6fff5", "ip": None, "port": None, "reportAgency": "云南国资委",
+    def save_settingdata(self):
+        setting_data = self.getSettingData()
+        setting = json.loads(setting_data)
+
+        data = {"id": setting['data']['basicInfoMap']['id'], "ip": None, "port": None, "reportAgency": "云南国资委",
                 "socialCreditCode": "1153000075718792X1", "apiCode": "SZ01", "userName": "Seq0vAPlI4kxaO82PA+VUA==",
                 "userPasswd": "Seq0vAPlI4kxaO82PA+VUA==", "preUserName": "Seq0vAPlI4kxaO82PA+VUA==",
                 "preUserPasswd": "Seq0vAPlI4kxaO82PA+VUA==", "uploadPath": "mvwO1O0sV9zehtOkSNf+IQ==",
@@ -138,18 +135,15 @@ class Test():
                 "sm2Key": "090023816A21F8526161DF47B1D0BDBA7765FA436E94507A6EAEEB74D4AB76593C94FAF46C0104DB92E6F39277AB59F192AB7B38FD746276EF37F956CDF8DBDC",
                 "sm4Key": "6629a5eb0b9149a29de72afd88f05ba7", "superiorSM2Key": "", "sm2PrivateKey": "", "modeWay": "1",
                 "gridData": "[{\"businessCaption\":\"省国资委采集目录\",\"businessLabel\":\"0037\",\"reportPath\":\"\"},{\"businessCaption\":\"反馈文件\",\"businessLabel\":\"0007\",\"reportPath\":\"\"},{\"businessCaption\":\"静态文件\",\"businessLabel\":\"0002\",\"reportPath\":\"\"}]"}
-        post = self.post_api(cookies, "/gzapi/save", data=data)
-        print(post.text)
+        post = self.post_api("/gzapi/save", data=data)
+        print(post)
 
 
 if __name__ == "__main__":
-    obj = Test()
+    obj = DmpLogin()
     try:
-        obj.login_system()
-        obj.get_welcome()
-        cookies = obj.get_cookies()
-        obj.save_settingdata(cookies)
-        obj.close()
+
+        obj.save_settingdata()
     except Exception as e:
         print(e)
     finally:
