@@ -10,9 +10,6 @@ import json
 import pytest
 
 
-# cases, list_params = util.get_test_data("data/test_setting.yml")
-
-
 # 系统管理
 
 class TestReport:

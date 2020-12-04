@@ -18,14 +18,15 @@ import pytest
 class TestReport:
     # @pytest.mark.parametrize("case,data,expected", list(list_params), ids=cases)
     # test = DmpLogin()
-    @pytest.mark.repeat(50)
+
+    # @pytest.mark.repeat(50)
     def test_modeltree(self):
         test = DmpLogin()
         data = {"id": "DAST"}
         post = test.post_api("/modeltree/getChildNode", data=data)
         assert len(post) > 0
 
-    @pytest.mark.repeat(50)
+    # @pytest.mark.repeat(50)
     def test_getRootAndDirectChildNodeiDM(self):
         test = DmpLogin()
         postsearch = test.post_api("/modeltree/getRootAndDirectChildNode",
@@ -33,7 +34,7 @@ class TestReport:
         print(postsearch)
         assert len(postsearch) > 0
 
-    @pytest.mark.repeat(50)
+    # @pytest.mark.repeat(50000)
     def test_getRootAndDirectChildNodeDATS(self):
         test = DmpLogin()
         postsearch = test.post_api("/modeltree/getRootAndDirectChildNode",
@@ -41,13 +42,13 @@ class TestReport:
         print(postsearch)
         assert len(postsearch) > 0
 
-    @pytest.mark.repeat(50)
+    # @pytest.mark.repeat(50000)
     def test_getIdiEtlShow(self):
         test = DmpLogin()
         postsearch = test.get_api("/trans/getIdiEtlShow")
         print(postsearch)
 
-    @pytest.mark.repeat(50)
+    # @pytest.mark.repeat(50000)
     def test_getSettingData(self):
         test = DmpLogin()
         postsearch = test.get_api("/gzapi/getSettingData")
