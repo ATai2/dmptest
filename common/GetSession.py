@@ -13,28 +13,33 @@ from selenium.webdriver.common.by import By
 from common.Rest import restPost
 
 
-class DmpLogin():
-    def __init__(self):
-        self.url = 'http://localhost:8085'
-        # 启用无头模式，可选
-        browser_options = webdriver.ChromeOptions()
-        browser_options.add_argument('--headless')
-        browser_options.add_argument('--disable-gpu')
-        self.browser = webdriver.Chrome(chrome_options=browser_options)
-        # self.browser = webdriver.Chrome()
+class DmpLogin(object):
+    cookieStr = None
 
-        self.login_system()
-        cookies = self.get_cookies()
-        cookieMap = {}
-        cookieStr = ""
-        for item in cookies:
-            cookieStr += item['name'] + "=" + item['value'] + ";"
-            cookieMap[item['name']] = item['value']
+    def __init__(self):
+        self.url = 'http://10.110.87.202:8085'
+        # self.url = 'http://localhost:8085'
+        # 启用无头模式，可选
+        if DmpLogin.cookieStr == None:
+
+            browser_options = webdriver.ChromeOptions()
+            browser_options.add_argument('--headless')
+            browser_options.add_argument('--disable-gpu')
+            self.browser = webdriver.Chrome(chrome_options=browser_options)
+            # self.browser = webdriver.Chrome()
+            self.login_system()
+            cookies = self.get_cookies()
+            cookieMap = {}
+            cookieStr = ""
+            for item in cookies:
+                cookieStr += item['name'] + "=" + item['value'] + ";"
+                cookieMap[item['name']] = item['value']
+            DmpLogin.cookieStr = cookieStr
+            self.close()
         self.headers = {
             "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
-            "Cookie": cookieStr
+            "Cookie": DmpLogin.cookieStr
         }
-        self.close()
 
     # 登录系统，具体到自己系统时需要自行修改
     def login_system(self):
@@ -98,9 +103,9 @@ class DmpLogin():
         return post
 
     def post_api(self, path, json=None, data=None):
-        print("参数path"+path)
-        print("参数json"+str(json))
-        print("参数data"+str(data))
+        print("参数path" + path)
+        print("参数json" + str(json))
+        print("参数data" + str(data))
 
         url = self.url + '/dmp-datafactory' + path
 
@@ -117,7 +122,6 @@ class DmpLogin():
         else:
             print("post error")
 
-
     # post = requests.post(url, headers=headers)
     # print(post.text)
 
@@ -130,9 +134,6 @@ class DmpLogin():
         # 退出程序时关闭浏览器
         # self.browser.close()
         self.browser.quit()
-
-
-
 
 # if __name__ == "__main__":
 #     obj = DmpLogin()

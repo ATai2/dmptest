@@ -17,61 +17,44 @@ import pytest
 
 class TestReport:
     # @pytest.mark.parametrize("case,data,expected", list(list_params), ids=cases)
-    # def test_save_label_scope(self):
-    #     test = DmpLogin()
-    #     try:
-    #         data = {"dimname": "dd", "dimcode": "dd", "descriptions": "test", "pid": "-1", "orderid": "1"}
-    #         post = test.post_api("/labelDimension/saveTagDimension", json=data)
-    #         util.info(post)
-    #
-    #     except Exception as e:
-    #         util.info(e)
-
-    #  标签维度查询
-    def test_label_scope(self):
+    # test = DmpLogin()
+    @pytest.mark.repeat(50)
+    def test_modeltree(self):
         test = DmpLogin()
-        postsearch = test.get_api("/labelDimension/getDimensionListData",
-                                  { "page": 1, "size": 20})
+        data = {"id": "DAST"}
+        post = test.post_api("/modeltree/getChildNode", data=data)
+        assert len(post) > 0
+
+    @pytest.mark.repeat(50)
+    def test_getRootAndDirectChildNodeiDM(self):
+        test = DmpLogin()
+        postsearch = test.post_api("/modeltree/getRootAndDirectChildNode",
+                                   data={"id": "iDM"})
         print(postsearch)
-        assert postsearch['total']>=10
+        assert len(postsearch) > 0
 
-    # 标签维度添加，查询，删除
-    def test_del_label_scope(self):
+    @pytest.mark.repeat(50)
+    def test_getRootAndDirectChildNodeDATS(self):
         test = DmpLogin()
-        # try:
-        data = {"dimname": "ddtest", "dimcode": "ddtest", "descriptions": "test", "pid": "-1", "orderid": "1"}
-        postsave = test.post_api("/labelDimension/saveTagDimension", json=data)
-        print(postsave)
-
-        postsearch = test.get_api("/labelDimension/getDimensionListData",
-                                   {"searchContent": "ddtest", "page": 1, "size": 20})
+        postsearch = test.post_api("/modeltree/getRootAndDirectChildNode",
+                                   data={"id": "DATS"})
         print(postsearch)
-        post = test.post_api("/labelDimension/deleteDimensionList", json=[postsearch['rows'][0]['ID']])
-        util.info(post)
-        # except Exception as e:
-        #     print(e)
-        #     util.info(e)
-        assert postsave['code'] == '200'
-        assert postsearch['total'] == 1
-        assert post['code'] == '200'
+        assert len(postsearch) > 0
 
-    def test_lable_search_private_info(self):
+    @pytest.mark.repeat(50)
+    def test_getIdiEtlShow(self):
         test = DmpLogin()
-        postsearch = test.get_api("/labelDimension/getDimensionListData",
-                                  {"searchContent": "ddtest", "page": 1, "size": 20})
+        postsearch = test.get_api("/trans/getIdiEtlShow")
         print(postsearch)
 
-    def test_lable_search_private_info_del(self):
+    @pytest.mark.repeat(50)
+    def test_getSettingData(self):
         test = DmpLogin()
-        postsearch = test.get_api("/tagManagement/addTagInfo",
-                                  {"searchContent": "ddtest", "page": 1, "size": 20})
+        postsearch = test.get_api("/gzapi/getSettingData")
         print(postsearch)
 
-
-
-    # def test_
 
 if __name__ == '__main__':
     b = TestReport()
-    b.test_del_label_scope()
+    b.test_modeltree()
     # test = DmpLogin()
