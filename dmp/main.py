@@ -8,7 +8,9 @@
 import os, pytest
 
 if __name__ == '__main__':
-    pytest.main(["--html=./report.html"])
+    # 2 并发执行
+    # pytest.main(["-n 2","--html=./report.html"])
+    pytest.main(["-v", "-n 2", "--html=./report.html"])
     # pytest.main(["--count=10", "--html=./report.html"])
     # os.system("py.test  --html=./report.html")
     # os.system("py.test test_report.py --html=./report.html")
