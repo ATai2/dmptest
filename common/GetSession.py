@@ -17,8 +17,8 @@ class DmpLogin(object):
     cookieStr = None
 
     def __init__(self):
-        self.url = 'http://10.110.87.202:8085'
-        # self.url = 'http://localhost:8085'
+        # self.url = 'http://10.110.87.202:8085'
+        self.url = 'http://localhost:8085'
         # 启用无头模式，可选
         if DmpLogin.cookieStr == None:
 
