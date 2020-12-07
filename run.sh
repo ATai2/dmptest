@@ -1,0 +1,1 @@
+python3 ./dmp/main.py
