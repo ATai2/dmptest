@@ -8,6 +8,7 @@
 import os, pytest
 
 if __name__ == '__main__':
+
     # 2 并发执行
     # pytest.main(["-n 2","--html=./report.html"])
     pytest.main(["test_setting.py::TestReport::test_save_settingdata","-v",   "--html=./report.html"])
