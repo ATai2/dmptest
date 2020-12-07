@@ -10,7 +10,9 @@ import os, pytest
 if __name__ == '__main__':
     # 2 并发执行
     # pytest.main(["-n 2","--html=./report.html"])
-    pytest.main(["-v",   "--html=./report.html"])
+    pytest.main(["test_setting.py::TestReport::test_save_settingdata","-v",   "--html=./report.html"])
+    # pytest.main(["test_share.py::TestReport::test_resource_dir_add_batch","-v",   "--html=./report.html"])
+    # pytest.main(["-v",   "--html=./report.html"])
     # pytest.main(["-v", "-n 2", "--html=./report.html"])
     # pytest.main(["--count=10", "--html=./report.html"])
     # os.system("py.test  --html=./report.html")

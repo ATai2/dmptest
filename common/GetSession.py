@@ -11,7 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from common.Rest import restPost
-
+from selenium.webdriver.chrome.options import Options
 
 class DmpLogin(object):
     cookieStr = None
@@ -21,11 +21,15 @@ class DmpLogin(object):
         self.url = 'http://localhost:8085'
         # 启用无头模式，可选
         if DmpLogin.cookieStr == None:
-
-            browser_options = webdriver.ChromeOptions()
-            browser_options.add_argument('--headless')
-            browser_options.add_argument('--disable-gpu')
-            self.browser = webdriver.Chrome(chrome_options=browser_options)
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument("window-size=1024,768")
+            chrome_options.add_argument("--no-sandbox")
+            # browser_options = webdriver.ChromeOptions()
+            # browser_options.add_argument('--headless')
+            # browser_options.add_argument('--disable-gpu')
+            self.browser = webdriver.Chrome(chrome_options=chrome_options)
             # self.browser = webdriver.Chrome()
             self.login_system()
             cookies = self.get_cookies()
