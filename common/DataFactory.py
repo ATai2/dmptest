@@ -5,15 +5,14 @@
 # software: PyCharm
 
 
-from selenium import webdriver
 import time
 import common.Login as Login
-import common.Config as config
+
 
 class Test(object):
 
     def test_open(self, driver):
-        driver.get(config.url+'mainFrame?id=DACX')
+        driver.get(Config.url + 'mainFrame?id=DACX')
         time.sleep(5)
 
     def test_b_api_add(self,driver):

@@ -4,9 +4,7 @@
 # datetime:2020/12/3 11:12
 # software: PyCharm
 
-import common.util as util
-from common.GetSession import DmpLogin
-import json
+from dmp.GetSession import DmpLogin
 import pytest
 
 

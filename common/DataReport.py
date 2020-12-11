@@ -5,10 +5,7 @@
 # software: PyCharm
 
 
-from selenium import webdriver
-import time, requests,base64
-import common.Config as config
-
+import requests
 
 
 class Test(object):

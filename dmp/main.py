@@ -4,9 +4,9 @@
 # datetime:2020/12/3 15:05
 # software: PyCharm
 
-import common.Config as config
-import os, pytest, sys
-from common.GetSession import DmpLogin
+import pytest, sys
+from GetSession import DmpLogin
+print(sys.path)
 
 if __name__ == '__main__':
     arglengh = len(sys.argv)
@@ -35,8 +35,8 @@ if __name__ == '__main__':
             "pg": "9007",
         }
         for k in dmplist:
-            config.url = "http://" + ip + ":" + dmplist[k]
-            print(config.url)
+            Config.url = "http://" + ip + ":" + dmplist[k]
+            print(Config.url)
             DmpLogin.cookieStr=None
             # pytest.main(["-v", "--html=../" + k + "report.html"])
             pytest.main(["test_setting.py","-v", "--html=./" + k + "report.html"])

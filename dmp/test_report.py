@@ -5,7 +5,7 @@
 # software: PyCharm
 
 import common.util as util
-from common.GetSession import DmpLogin
+from dmp.GetSession import DmpLogin
 import json
 import pytest
 

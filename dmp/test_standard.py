@@ -5,9 +5,7 @@
 # software: PyCharm
 
 import common.util as util
-from common.GetSession import DmpLogin
-import json
-import pytest
+from dmp.GetSession import DmpLogin
 
 
 # cases, list_params = util.get_test_data("data/test_setting.yml")

@@ -6,8 +6,6 @@
 
 
 from selenium import webdriver
-import time
-import common.Config as config
 
 
 class Test(object):
@@ -15,7 +13,7 @@ class Test(object):
     def __init__(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
-        self.driver.get(config.url)
+        self.driver.get(Config.url)
 
     def get_driver(self):
         return self.driver
