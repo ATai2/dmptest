@@ -5,4 +5,4 @@
 # software: PyCharm
 
 
-url = 'http://localhost:8085/dmp-datafactory/'
+url = 'http://localhost:8085'

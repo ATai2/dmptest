@@ -10,6 +10,7 @@ import json as jsonlib
 
 def restPost(url, data=None, json=None, headers=None):
     post = requests.post(url, data=data, json=json, headers=headers)
+    print("url:"+url)
     if post.status_code == 200:
         print(post.text)
         return jsonlib.loads(post.text)

@@ -12,13 +12,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from common.Rest import restPost
 from selenium.webdriver.chrome.options import Options
+import common.Config as config
 
 class DmpLogin(object):
     cookieStr = None
 
     def __init__(self):
         # self.url = 'http://10.110.87.202:8085'
-        self.url = 'http://localhost:8085'
+        self.url = config.url
         # 启用无头模式，可选
         if DmpLogin.cookieStr == None:
             chrome_options = Options()

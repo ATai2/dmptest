@@ -4,16 +4,50 @@
 # datetime:2020/12/3 15:05
 # software: PyCharm
 
-
-import os, pytest
+import common.Config as config
+import os, pytest, sys
+from common.GetSession import DmpLogin
 
 if __name__ == '__main__':
+    arglengh = len(sys.argv)
+    print(arglengh)
+    if arglengh == 1:
+        arg1 = None
+        ip = None
+    elif arglengh == 2:
+        arg1 = sys.argv[1]
+        ip = None
+    elif arglengh == 3:
+        arg1 = sys.argv[1]
+        ip = sys.argv[2]
+
+    if ip == None:
+        ip = "localhost"
+
+    if arg1 == "remote":
+        dmplist = {
+            "dm": "9001",
+            "ms": "9002",
+            "my8": "9003",
+            "my57": "9004",
+            "orc": "9005",
+            "oscar": "9006",
+            "pg": "9007",
+        }
+        for k in dmplist:
+            config.url = "http://" + ip + ":" + dmplist[k]
+            print(config.url)
+            DmpLogin.cookieStr=None
+            # pytest.main(["-v", "--html=../" + k + "report.html"])
+            pytest.main(["test_setting.py","-v", "--html=./" + k + "report.html"])
+    else:
+        pytest.main(["-v", "--html=./report.html"])
 
     # 2 并发执行
     # pytest.main(["-n 2","--html=./report.html"])
-    pytest.main(["test_setting.py::TestReport::test_save_settingdata","-v",   "--html=./report.html"])
+    # pytest.main(["test_setting.py::TestReport::test_save_settingdata","-v",   "--html=./report.html"])
     # pytest.main(["test_share.py::TestReport::test_resource_dir_add_batch","-v",   "--html=./report.html"])
-    # pytest.main(["-v",   "--html=./report.html"])
+
     # pytest.main(["-v", "-n 2", "--html=./report.html"])
     # pytest.main(["--count=10", "--html=./report.html"])
     # os.system("py.test  --html=./report.html")
