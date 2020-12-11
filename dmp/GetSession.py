@@ -10,6 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from Rest import restPost
 from selenium.webdriver.chrome.options import Options
+import Config  as Config
 
 
 class DmpLogin(object):
