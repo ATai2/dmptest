@@ -3,12 +3,22 @@
 # author:wangtaihe
 # datetime:2020/12/3 15:05
 # software: PyCharm
+import os, pytest, sys
 
-import pytest, sys
-from GetSession import DmpLogin
-print(sys.path)
+current_directory = os.path.dirname(os.path.abspath(__file__))
+root_path = os.path.abspath(os.path.dirname(current_directory) + os.path.sep + ".")
+sys.path.append(root_path)
+
+import common.Config as config
+from common.GetSession import DmpLogin
+
+
 
 if __name__ == '__main__':
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    root_path = os.path.abspath(os.path.dirname(current_directory) + os.path.sep + ".")
+    sys.path.append(root_path)
+
     arglengh = len(sys.argv)
     print(arglengh)
     if arglengh == 1:
@@ -35,13 +45,14 @@ if __name__ == '__main__':
             "pg": "9007",
         }
         for k in dmplist:
-            Config.url = "http://" + ip + ":" + dmplist[k]
-            print(Config.url)
+            config.url = "http://" + ip + ":" + dmplist[k]
+            print(config.url)
             DmpLogin.cookieStr=None
             # pytest.main(["-v", "--html=../" + k + "report.html"])
             pytest.main(["test_setting.py","-v", "--html=./" + k + "report.html"])
     else:
-        pytest.main(["-v", "--html=./report.html"])
+        # pytest.main(["-v", "--html=./report.html"])
+        pytest.main(["test_setting.py", "-v", "--html=./report.html"])
 
     # 2 并发执行
     # pytest.main(["-n 2","--html=./report.html"])
